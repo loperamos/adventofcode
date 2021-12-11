@@ -1,10 +1,26 @@
 import logging
+from pprint import pformat
 
 import coloredlogs
 
-coloredlogs.install(level='DEBUG')
+FIELD_STYLES = dict(
+    asctime=dict(color='green'),
+    hostname=dict(color='magenta'),
+    levelname=dict(color='white', bold=True),
+    name=dict(color='blue'),
+    programname=dict(color='cyan'),
+    username=dict(color='yellow'),
+)
+
+coloredlogs.install(level='DEBUG', field_styles=FIELD_STYLES)
 
 logger = logging.getLogger(__name__)
+forced_no_debug = False
+
+
+def force_no_debug():
+    global forced_no_debug
+    forced_no_debug = True
 
 
 def set_logger(new_logger) -> None:
@@ -13,7 +29,12 @@ def set_logger(new_logger) -> None:
 
 
 def set_debug(debug: bool = False) -> None:
-    logger.setLevel(logging.DEBUG if debug else logging.INFO)
+    global forced_no_debug
+    logger.setLevel(logging.DEBUG if debug and not forced_no_debug else logging.INFO)
+
+
+def df(item: object) -> None:
+    logger.debug(pformat(item))
 
 
 def d(msg: str) -> None:
