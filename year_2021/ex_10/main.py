@@ -1,6 +1,6 @@
 import logging
 from statistics import median
-from typing import *
+from typing import Generator
 
 from utils.runner import run_main
 

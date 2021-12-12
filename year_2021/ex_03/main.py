@@ -30,7 +30,7 @@ def pt_1(prob_input: Generator) -> int:
 
 
 def pt_2(prob_input: Generator) -> int:
-    bits = [[c for c in line] for line in prob_input]
+    bits = [list(line) for line in prob_input]
     df(bits)
     ox_filter = ""
     co2_filter = ""

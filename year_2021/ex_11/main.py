@@ -1,6 +1,6 @@
 import itertools
 import logging
-from typing import *
+from typing import Generator
 
 import numpy as np
 
@@ -10,7 +10,7 @@ from utils.runner import run_main
 logger = logging.getLogger(__name__)
 
 
-def update_flashed(energies: np.array, flashed: Set, i: int, j: int) -> bool:
+def update_flashed(energies: np.array, flashed: set, i: int, j: int) -> bool:
     n, m = energies.shape
 
     def valid(a, b):

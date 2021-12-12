@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from typing import *
+from typing import Generator
 
 from utils.debugging import d, df
 from utils.runner import run_main
@@ -39,7 +39,7 @@ num_to_segments = {
     5: {Segment.TOP, Segment.TOP_LEFT, Segment.MID, Segment.BOTTOM_RIGHT, Segment.BOTTOM},
     6: {Segment.TOP, Segment.TOP_LEFT, Segment.MID, Segment.BOTTOM_RIGHT, Segment.BOTTOM_RIGHT, Segment.BOTTOM},
     7: {Segment.TOP, Segment.TOP_RIGHT, Segment.BOTTOM_RIGHT},
-    8: {v for v in Segment},
+    8: set(Segment),
     9: {Segment.TOP, Segment.TOP_RIGHT, Segment.TOP_LEFT, Segment.MID, Segment.BOTTOM_RIGHT, Segment.BOTTOM},
 }
 
@@ -57,9 +57,8 @@ def pt_2(prob_input: Generator) -> int:
         wires_to_number = {}
         segment_to_wires = {v: set(c for c in "abcdefg") for v in Segment}
         tests, outputs = line.split(" | ")
-
-        for test in sorted(tests.split(), key=lambda a: len(a)):
-            wires = {wire for wire in test}
+        for test_vals in sorted(tests.split(), key=len):
+            wires = set(test_vals)
             length = len(wires)
             # Easy case
             if length in len_to_num:

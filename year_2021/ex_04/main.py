@@ -53,10 +53,9 @@ def pt_2(prob_input: Generator) -> int:
             if len(current_count_v) == 4 or len(current_count_h) == 4:
                 if last_winning_board is not None:
                     return (sum(board_vals[board_id]) - draw) * draw
-                else:
-                    df(board_vals[board_id])
-                    del boards_counting[board_id]
-                    continue
+                df(board_vals[board_id])
+                del boards_counting[board_id]
+                continue
 
             boards_counting[board_id]["v"][j].add(draw)
             boards_counting[board_id]["h"][i].add(draw)
