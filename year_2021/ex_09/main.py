@@ -2,11 +2,9 @@ import logging
 import math
 from typing import Generator, Any
 
-import numpy as np
-
-from utils.debugging import d, df
+from utils.debugging import d
+from utils.geometry import Point, Grid
 from utils.runner import run_main
-from utils.geometry import Point
 
 logger = logging.getLogger(__name__)
 
@@ -20,52 +18,40 @@ def is_in_board(pos: Point, n: int, m: int) -> bool:
 
 
 def get_neighbours(pos: Point, n: int, m: int) -> Generator[Point, Any, None]:
-    neighbours = [pos + Point.from_vals(1, 0), pos + Point.from_vals(-1, 0), pos + Point.from_vals(0, 1), pos + Point.from_vals(0, -1)]
+    neighbours = [pos + Point(1, 0), pos + Point(-1, 0), pos + Point(0, 1), pos + Point(0, -1)]
     return (neighbour for neighbour in neighbours if is_in_board(neighbour, n, m))
 
 
 def pt_1(prob_input: Generator) -> int:
-    heightmap = np.array([[int(pos) for pos in row] for row in prob_input])
-    df(heightmap)
-
-    n = len(heightmap)
-    m = len(heightmap[0])
-
+    heightmap = Grid.from_str(prob_input)
     count = 0
 
-    for i in range(n):
-        row = heightmap[i]
-        for j in range(m):
-            local_min = True
-            h = row[j]
-            for neighbour in get_neighbours(Point.from_vals(i, j), n, m):
-                n_h = heightmap[neighbour.i, neighbour.j]
-                if h >= n_h:
-                    local_min = False
-            if local_min:
-                count += 1 + h
+    for point, h in heightmap.items():
+        local_min = True
+        for neighbour in heightmap.get_neighbours(point, diag=False):
+            n_h = heightmap[neighbour]
+            if h >= n_h:
+                local_min = False
+        if local_min:
+            count += 1 + h
     return count
 
 
 def pt_2(prob_input: Generator) -> int:
-    heightmap = np.array([[int(pos) for pos in row] for row in prob_input])
-    df(heightmap)
+    heightmap = Grid.from_str(prob_input)
 
-    n = len(heightmap)
-    m = len(heightmap[0])
-
-    all_idx = {Point.from_vals(i, j) for j in range(m) for i in range(n)}
+    all_idx = set(heightmap.points())
     sizes = []
     while all_idx:
         indexes = [all_idx.pop()]
         current_size = 0
         while indexes:
             to_check = indexes.pop()
-            h = heightmap[to_check.i, to_check.j]
+            h = heightmap[to_check]
             if h == 9:
                 continue
             current_size += 1
-            for neighbour in get_neighbours(to_check, n, m):
+            for neighbour in heightmap.get_neighbours(to_check, diag=False):
                 if neighbour in all_idx:
                     all_idx.remove(neighbour)
                     indexes.append(neighbour)

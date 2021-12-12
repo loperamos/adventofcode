@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pprint import pformat
 from typing import Generator, Any
 
-from utils.debugging import d, df
+from utils.debugging import d
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -84,8 +84,7 @@ def pt_2(prob_input: Generator[str, Any, None]) -> int:
             if not next_node.big and next_node in path:
                 if twice:
                     continue
-                else:
-                    new_twice = True
+                new_twice = True
             new_path = path.union({next_node})
             stack.append((next_node, new_path, new_twice, str_path + f"-{next_node.id}"))
     d(f"\n{pformat(sorted(paths))}")

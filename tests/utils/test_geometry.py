@@ -1,9 +1,82 @@
-from utils.debugging import i, df
-from year_2021.utils.geometry import Point
+from itertools import product
+
+import numpy as np
+
+from utils.geometry import Point, Grid, multidim_range, diag_neighbours, straight_neighbours
 
 
-def test_create_point():
-    p_1 = Point.from_vals(0, 1, 5, 6, 3)
-    p_2 = Point.from_vals(0, 1, 5, 6, 3)
-    df(p_1 + p_2)
-    df(p_1 * 2)
+def test_point_operations():
+    p_1 = Point(0, 1, 5, 6, 3)
+    assert p_1 + p_1 == p_1 * 2
+
+
+def test_point_operations_arr():
+    p_1 = Point(arr=np.array([0, 1, 5, 6, 3]))
+    assert p_1 + p_1 == p_1 * 2
+
+
+def test_multidim_range():
+    normal_ranges = (p for p in product(range(2), range(3), range(4)))
+    multidim_ranges = multidim_range(2, 3, 4)
+    for left, right in zip(normal_ranges, multidim_ranges):
+        assert left == right
+
+
+def test_grid():
+    lines = [
+        "1234",
+        "3455",
+        "8765"
+    ]
+
+    grid = Grid.from_str(line for line in lines)
+    assert grid[Point(2, 1)] == 7
+    assert grid[2, 1] == 7
+
+
+def test_diag_neighbours():
+    assert set(diag_neighbours(2)) == {Point(-1, -1), Point(-1, 0), Point(-1, 1), Point(0, -1), Point(0, 1), Point(1, -1), Point(1, 0), Point(1, 1)}
+
+
+def test_straight_neighbours():
+    assert set(straight_neighbours(2)) == {Point(-1, 0), Point(0, -1), Point(0, 1), Point(1, 0)}
+
+
+def test_neighbours():
+    lines = [
+        "1234",
+        "3455",
+        "8765"
+    ]
+
+    grid = Grid.from_str(line for line in lines)
+    straight_n = set(grid.get_neighbours(Point(1, 0), diag=False))
+    diag_n = set(grid.get_neighbours(Point(1, 0), diag=True))
+    assert straight_n == {Point(0, 0), Point(1, 1), Point(2, 0)}
+    assert diag_n == {Point(0, 0), Point(1, 1), Point(2, 0), Point(0, 1), Point(2, 1)}
+
+
+def test_grid_sum():
+    lines = [
+        "12",
+        "13"
+    ]
+
+    grid = Grid.from_str(line for line in lines)
+
+    lines_add = [
+        "23",
+        "24"
+    ]
+    grid_add = Grid.from_str(line for line in lines_add)
+    assert (grid + 1) == grid_add
+
+
+def test_grid_iterate():
+    lines = [
+        "12",
+        "13"
+    ]
+
+    grid = Grid.from_str(line for line in lines)
+    assert set(grid.items()) == {(Point(0, 0), 1), (Point(1, 0), 1), (Point(0, 1), 2), (Point(1, 1), 3)}
