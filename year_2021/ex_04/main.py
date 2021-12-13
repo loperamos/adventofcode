@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from typing import Generator, Any
 
-from utils.debugging import df, d
+from utils.debugging import df, debug
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -14,10 +14,10 @@ def pt_1(prob_input: Generator) -> int:
     boards_counting = init_boards_counting(n_boards)
 
     for draw in draws:
-        d(f"{draw=}")
+        debug(f"{draw=}")
         for board_id, loc in boards[draw].items():
             i, j = loc
-            d(f"{board_id=}, ({i=}, {j=})")
+            debug(f"{board_id=}, ({i=}, {j=})")
             current_count_v = boards_counting[board_id]["v"][j]
             current_count_h = boards_counting[board_id]["h"][i]
             if len(current_count_v) == 4 or len(current_count_h) == 4:
@@ -37,7 +37,7 @@ def pt_2(prob_input: Generator) -> int:
     last_winning_board = None
 
     for draw in draws:
-        d(f"{draw=}")
+        debug(f"{draw=}")
         if len(boards_counting) == 1:
             last_winning_board = next(iter(boards_counting.keys()))
             df(board_vals[last_winning_board])
@@ -47,7 +47,7 @@ def pt_2(prob_input: Generator) -> int:
             if last_winning_board is not None and board_id != last_winning_board:
                 continue
             i, j = loc
-            d(f"{board_id=}, ({i=}, {j=})")
+            debug(f"{board_id=}, ({i=}, {j=})")
             current_count_v = boards_counting[board_id]["v"][j]
             current_count_h = boards_counting[board_id]["h"][i]
             if len(current_count_v) == 4 or len(current_count_h) == 4:

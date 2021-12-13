@@ -4,7 +4,7 @@ from typing import Generator, Any
 import numpy as np
 from numpy.typing import NDArray
 
-from utils.debugging import d, df, i
+from utils.debugging import d, df, info
 from utils.geometry import Point
 from utils.runner import run_main
 
@@ -68,7 +68,7 @@ def pt_2(prob_input: Generator[str, Any, None]) -> int:
     matrix_str = matrix.astype(str)
     matrix_str[matrix_str == "1"] = "#"
     matrix_str[matrix_str == "0"] = " "
-    i("\n" + np.array2string(matrix_str, max_line_width=400))
+    info("\n" + np.array2string(matrix_str, max_line_width=400))
 
     return matrix.sum().sum()
 

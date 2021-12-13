@@ -3,7 +3,7 @@ from typing import Generator
 
 import numpy as np
 
-from utils.debugging import df, d
+from utils.debugging import df, debug
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ def pt_1(prob_input: Generator) -> int:
         for i, bit in enumerate(line):
             summing[i] += int(bit) * 2 - 1
 
-    d(f"{summing=}")
+    debug(f"{summing=}")
     o_b = ""
     c_b = ""
     for b in summing:
@@ -54,7 +54,7 @@ def pt_2(prob_input: Generator) -> int:
             co2_filter += "0" if co2_counts[0] > co2_counts[1] else "1"
     x = int(ox_filter, 2)
     y = int(co2_filter, 2)
-    d(f"{x=}, {y=}")
+    debug(f"{x=}, {y=}")
     return x * y
 
 

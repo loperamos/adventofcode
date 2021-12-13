@@ -3,7 +3,7 @@ from typing import Generator
 
 import numpy as np
 
-from utils.debugging import d
+from utils.debugging import debug
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def pt_2(prob_input: Generator) -> int:
             position[0] += a[1] * aim
         else:
             aim += a[0]
-        d(f"{aim=}, {position=}")
+        debug(f"{aim=}, {position=}")
 
     return position[0] * position[1]
 

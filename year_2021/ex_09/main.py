@@ -2,7 +2,7 @@ import logging
 import math
 from typing import Generator, Any
 
-from utils.debugging import d
+from utils.debugging import debug
 from utils.geometry import Point, Grid
 from utils.runner import run_main
 
@@ -56,12 +56,12 @@ def pt_2(prob_input: Generator) -> int:
                     all_idx.remove(neighbour)
                     indexes.append(neighbour)
 
-        d(f"{current_size=}")
+        debug(f"{current_size=}")
         if current_size > 0:
             sizes.append(current_size)
 
     top_3 = sorted(sizes, reverse=True)[:3]
-    d(f"{top_3=}")
+    debug(f"{top_3=}")
     return math.prod(top_3)
 
 

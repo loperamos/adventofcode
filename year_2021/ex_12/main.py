@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pprint import pformat
 from typing import Generator, Any
 
-from utils.debugging import d
+from utils.debugging import debug
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ def pt_1(prob_input: Generator[str, Any, None]) -> int:
                 continue
             new_path = path.union({next_node})
             stack.append((next_node, new_path, str_path + f"-{next_node.id}"))
-    d(f"\n{pformat(sorted(paths))}")
+    debug(f"\n{pformat(sorted(paths))}")
     return len(paths)
 
 
@@ -87,7 +87,7 @@ def pt_2(prob_input: Generator[str, Any, None]) -> int:
                 new_twice = True
             new_path = path.union({next_node})
             stack.append((next_node, new_path, new_twice, str_path + f"-{next_node.id}"))
-    d(f"\n{pformat(sorted(paths))}")
+    debug(f"\n{pformat(sorted(paths))}")
     return len(paths)
 
 

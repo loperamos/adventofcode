@@ -39,9 +39,9 @@ def df(item: object) -> None:
     logger.debug("\n" + pformat(item))
 
 
-def d(msg: str) -> None:
+def debug(msg: str) -> None:
     logger.debug(msg)
 
 
-def i(msg: str) -> None:
+def info(msg: str) -> None:
     logger.info(msg)
