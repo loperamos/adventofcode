@@ -4,7 +4,7 @@ from typing import Generator, Any
 import numpy as np
 from numpy.typing import NDArray
 
-from utils.debugging import d, df, info
+from utils.debugging import df, info
 from utils.geometry import Point
 from utils.runner import run_main
 

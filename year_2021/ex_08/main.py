@@ -2,7 +2,7 @@ import logging
 from enum import Enum
 from typing import Generator
 
-from utils.debugging import d, df
+from utils.debugging import debug, df
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ def pt_1(prob_input: Generator) -> int:
     counting = 0
     for line in prob_input:
         test, output = line.split(" | ")
-        d(f"{test=}, {output=}")
+        debug(f"{test=}, {output=}")
         for attempt in output.split():
             if len(attempt) in {2, 3, 4, 7}:
                 counting += 1

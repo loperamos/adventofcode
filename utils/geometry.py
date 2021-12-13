@@ -45,7 +45,7 @@ class Point:
         return hash(self.tup)
 
     def __eq__(self, other) -> bool:
-        return self.i == other.info and self.j == other.j
+        return self.i == other.i and self.j == other.j
 
     def __getitem__(self, item: int) -> int:
         if item > self.dim:
