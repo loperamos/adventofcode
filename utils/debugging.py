@@ -16,6 +16,8 @@ coloredlogs.install(level='DEBUG', field_styles=FIELD_STYLES)
 
 logger = logging.getLogger(__name__)
 forced_no_debug = False
+handler = logging.StreamHandler()
+handler.terminator = ""
 
 
 def force_no_debug():
@@ -34,7 +36,7 @@ def set_debug(debug: bool = False) -> None:
 
 
 def df(item: object) -> None:
-    logger.debug(pformat(item))
+    logger.debug("\n" + pformat(item))
 
 
 def d(msg: str) -> None:
