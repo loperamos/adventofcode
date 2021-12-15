@@ -64,6 +64,11 @@ class Point:
     def __str__(self) -> str:
         return self.__repr__()
 
+    def __lt__(self, other):
+        if self.i != other.i:
+            return self.i < other.i
+        return self.j < other.j
+
     def zeros(self):
         return not self.arr.any()
 
@@ -74,10 +79,14 @@ class Grid:
     vals: NDArray
 
     @classmethod
+    def from_arr(cls, array: NDArray):
+        return Grid(np.array(array.shape), array)
+
+    @classmethod
     def from_str(cls, line_generator: Generator[str, Any, None]) -> 'Grid':
         lines = list(line_generator)
         dims = np.array([len(lines), len(lines[0])])
-        matrix = np.zeros(dims)
+        matrix = np.zeros(dims, dtype=int)
         for i, line in enumerate(lines):
             for j, c in enumerate(line):
                 matrix[i, j] = int(c)
@@ -149,7 +158,7 @@ class Grid:
         return self.__repr__()
 
 
-def multidim_range(*dims: int) -> Generator[tuple[int], Any, None]:
+def multidim_range(*dims: int) -> Generator[tuple[int, ...], Any, None]:
     ranges = (range(dim) for dim in dims)
     return (p for p in product(*ranges))
 
