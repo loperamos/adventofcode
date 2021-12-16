@@ -72,16 +72,14 @@ def pt_1(prob_input: Generator[str, Any, None]) -> list[int]:
     return res
 
 
-def compute_package_2(bin_num, idx) -> tuple[int, int, int]:
-    sum_v = 0
+def compute_package_2(bin_num, idx) -> tuple[int, int]:
     v = bin_num[idx: idx + 3]
-    sum_v += int(v, 2)
     idx += 3
     t = bin_num[idx: idx + 3]
     idx += 3
     if t == "100":
         idx, n = compute_num(bin_num, idx)
-        return idx, sum_v, n
+        return idx, n
 
     l_id = bin_num[idx]
     idx += 1
@@ -91,25 +89,23 @@ def compute_package_2(bin_num, idx) -> tuple[int, int, int]:
         idx += 15
         max_ids = idx + length
         while idx < max_ids:
-            idx, new_sum, n = compute_package_2(bin_num, idx)
+            idx, n = compute_package_2(bin_num, idx)
             nums.append(n)
-            sum_v += new_sum
     else:
         count = int(bin_num[idx: idx + 11], 2)
         idx += 11
         nums = []
         for _ in range(count):
-            idx, new_sum, n = compute_package_2(bin_num, idx)
-            sum_v += new_sum
+            idx, n = compute_package_2(bin_num, idx)
             nums.append(n)
-    return idx, sum_v, type_to_op[int(t, 2)](nums)
+    return idx, type_to_op[int(t, 2)](nums)
 
 
 def pt_2(prob_input: Generator[str, Any, None]) -> list[int]:
     res = []
     for i, line in enumerate(prob_input):
         bin_num = hex_to_bin(line)
-        _, _, n = compute_package_2(bin_num, 0)
+        _, n = compute_package_2(bin_num, 0)
         res.append(n)
     return res
 
