@@ -1,17 +1,17 @@
+import heapq
 import logging
 import sys
 from typing import Generator, Any
 
 import numpy as np
 from numpy.typing import NDArray
-from sortedcontainers import SortedSet
 
-from utils.debugging import debug
+from utils.debugging import debug, df
 from utils.geometry import Grid, Point
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
-MAX_INT = 10000000
+MAX_INT = 20000000
 
 
 def increase_vals(in_array: NDArray, val: int) -> NDArray:
@@ -21,27 +21,49 @@ def increase_vals(in_array: NDArray, val: int) -> NDArray:
 
 
 def print_array(arr: NDArray) -> None:
-    print("\n" + np.array2string(arr, max_line_width=100000))
+    debug("\n" + np.array2string(arr, max_line_width=100000))
+
+
+def get_min_cost_heap(grid: Grid) -> int:
+    print_array(grid.vals)
+    distances = Grid(grid.dims, np.full(grid.dims, -1, dtype=int))
+    heap = [(0, Point(0, 0))]
+    last_pont = Point(grid.dims[0] - 1, grid.dims[1] - 1)
+    while heap:
+        dist, p = heapq.heappop(heap)
+        val = grid[p]
+
+        new_val = dist + val
+        if distances[p] == -1 or new_val < distances[p]:
+            distances[p] = new_val
+        else:
+            continue
+        if p == last_pont:
+            break
+
+        for n in grid.get_neighbours(p, diag=False):
+            heapq.heappush(heap, (new_val, n))
+
+    return distances[last_pont] - distances[Point(0, 0)]
 
 
 def get_min_cost(grid: Grid) -> int:
-    # print_array(grid.vals)
-    distances = Grid(grid.dims, np.full(grid.dims, MAX_INT, dtype=np.dtype))
+    print_array(grid.vals)
+    distances = Grid(grid.dims, np.full(grid.dims, MAX_INT, dtype=int))
     distances[Point(0, 0)] = 0
-    to_check = SortedSet([(0, Point(0, 0))])
-    while len(to_check) != 0:
-        dist, point = to_check.pop(0)
-
+    to_check = [(0, Point(0, 0))]
+    last_pont = Point(grid.dims[0] - 1, grid.dims[1] - 1)
+    while to_check:
+        dist, point = heapq.heappop(to_check)
         for n in grid.get_neighbours(point, diag=False):
             old_cost = distances[n]
             new_cost = grid[n] + dist
             if new_cost < old_cost:
-                if (old_cost, n) in to_check:
-                    to_check.remove((old_cost, n))
                 distances[n] = new_cost
-                to_check.add((new_cost, n))
-    # print_array(distances.vals)
-    val = distances[Point(grid.dims[0] - 1, grid.dims[1] - 1)]
+                heapq.heappush(to_check, (new_cost, n))
+                if n == last_pont:
+                    return new_cost
+    val = distances[last_pont]
     return val
 
 
@@ -58,6 +80,12 @@ def pt_2(prob_input: Generator[str, Any, None]) -> int:
 
 
 def main():
+    grid = Grid.from_arr(np.array([
+        [1, 100, 1, 1, 1, 1],
+        [1, 1, 1, 100, 100, 1],
+        [100, 100, 1, 2, 1, 1]
+    ]))
+    print(get_min_cost(grid))
     run_main(pt_1, pt_2, __file__, [
         40,
         386,
@@ -67,5 +95,5 @@ def main():
 
 
 if __name__ == "__main__":
-    np.set_printoptions(threshold=sys.maxsize)
+    np.set_printoptions(threshold=sys.maxsize, linewidth=10000)
     main()

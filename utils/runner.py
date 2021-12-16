@@ -1,12 +1,12 @@
 import logging
 from pathlib import Path
-from typing import List, Callable, Generator
+from typing import List, Callable, Generator, Any
 
 from utils.debugging import info, set_debug, set_logger
 from utils.files import LineGen
 
 
-def run_main(pt_1: Callable[[Generator], int], pt_2: Callable[[Generator], int], file: str, results: List[int]):
+def run_main(pt_1: Callable[[Generator], Any], pt_2: Callable[[Generator], Any], file: str, results: List[Any]):
     folder = Path(file).parent
     logger = logging.getLogger(folder.name)
     set_logger(logger)
