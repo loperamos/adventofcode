@@ -47,6 +47,11 @@ class Point:
     def __eq__(self, other) -> bool:
         return self.i == other.i and self.j == other.j
 
+    def __setitem__(self, key, value):
+        if key > self.dim:
+            raise Exception(f"Position {key} out of dimensions {self.dim}")
+        self.arr[key] = value
+
     def __getitem__(self, item: int) -> int:
         if item > self.dim:
             raise Exception(f"Position {item} out of dimensions {self.dim}")
