@@ -2,6 +2,8 @@ import logging
 from pprint import pformat
 
 import coloredlogs
+import numpy as np
+from numpy.typing import NDArray
 
 FIELD_STYLES = dict(
     asctime=dict(color='green'),
@@ -45,3 +47,7 @@ def debug(msg: str) -> None:
 
 def info(msg: str) -> None:
     logger.info(msg)
+
+
+def print_array(arr: NDArray) -> None:
+    debug("\n" + np.array2string(arr, max_line_width=100000))

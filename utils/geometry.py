@@ -1,9 +1,27 @@
 from dataclasses import dataclass
 from itertools import product
-from typing import Generator, Any, Callable
+from typing import Generator, Any, Callable, Iterable
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.spatial.transform import Rotation
+
+NO_ROTATION = Rotation.from_euler('x', 0, degrees=True)
+
+SINGLE_AXIS_ROTATIONS = [
+    NO_ROTATION,
+    Rotation.from_euler('x', 90, degrees=True),
+    Rotation.from_euler('x', 180, degrees=True),
+    Rotation.from_euler('x', 270, degrees=True),
+    Rotation.from_euler('yx', [180, 0], degrees=True),
+    Rotation.from_euler('yx', [180, 90], degrees=True),
+    Rotation.from_euler('yx', [180, 180], degrees=True),
+    Rotation.from_euler('yx', [180, 270], degrees=True)
+]
+
+NEW_AXIS_ROTATION = Rotation.from_euler('xy', [-90, -90], degrees=True)
+
+ALL_ROTATIONS: list[Rotation] = [a * b for a, b in product([NO_ROTATION, NEW_AXIS_ROTATION, NEW_AXIS_ROTATION * NEW_AXIS_ROTATION], SINGLE_AXIS_ROTATIONS)]
 
 
 @dataclass
@@ -16,14 +34,18 @@ class Point:
         if arr is not None:
             if len(arr.shape) != 1:
                 raise Exception("Wrong arr in input, shape must be 1D")
-            self.arr = arr.copy()
-            self.tup = tuple(arr)
-            self.dim = arr.shape[0]
+            self.arr = np.rint(arr).astype(int)
+            self.tup = tuple(self.arr)
+            self.dim = self.arr.shape[0]
             return
 
         self.arr = np.array(vals)
         self.tup = tuple(vals)
         self.dim = len(vals)
+
+    def rotate(self, rotation: Rotation) -> 'Point':
+        rotated_arr = rotation.apply(self.arr)
+        return Point(arr=rotated_arr)
 
     @property
     def i(self) -> int:
@@ -45,7 +67,7 @@ class Point:
         return hash(self.tup)
 
     def __eq__(self, other) -> bool:
-        return self.i == other.i and self.j == other.j
+        return self.tup == other.tup
 
     def __setitem__(self, key, value):
         if key > self.dim:
@@ -60,6 +82,9 @@ class Point:
     def __add__(self, other) -> 'Point':
         return Point(arr=self.arr + other.arr)
 
+    def __sub__(self, other) -> 'Point':
+        return Point(arr=self.arr - other.arr)
+
     def __mul__(self, other) -> 'Point':
         return Point(arr=self.arr * other)
 
@@ -70,12 +95,28 @@ class Point:
         return self.__repr__()
 
     def __lt__(self, other):
-        if self.i != other.i:
-            return self.i < other.i
-        return self.j < other.j
+        for i in range(self.dim):
+            if self[i] == other[i]:
+                continue
+            return self[i] < other[i]
+        return False
 
     def zeros(self):
         return not self.arr.any()
+
+
+def rotate_points(points: Iterable[Point], rotation: Rotation) -> list[Point]:
+    arrays = np.array([p.arr for p in points])
+    return [Point(arr=a) for a in rotation.apply(arrays)]
+
+
+def get_all_points_rotations(points: Iterable[Point]) -> Generator[tuple[list[Point], Rotation], Any, None]:
+    arrays = np.array([p.arr for p in points])
+    return (([Point(arr=a) for a in r.apply(arrays)], r) for r in ALL_ROTATIONS)
+
+
+def get_all_rotations(point: Point):
+    return [point.rotate(r) for r in ALL_ROTATIONS]
 
 
 @dataclass(frozen=True)

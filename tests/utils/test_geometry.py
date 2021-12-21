@@ -1,8 +1,33 @@
 from itertools import product
+from scipy.spatial.transform import Rotation
 
 import numpy as np
 
-from utils.geometry import Point, Grid, multidim_range, diag_neighbours, straight_neighbours
+from utils.geometry import Point, Grid, multidim_range, diag_neighbours, straight_neighbours, rotate_points, NEW_AXIS_ROTATION, get_all_points_rotations, get_all_rotations
+
+
+def test_new_axis():
+    points = [Point(1, 0, 0), Point(0, 1, 0), Point(0, 0, 1)]
+    print(rotate_points(points, NEW_AXIS_ROTATION * NEW_AXIS_ROTATION * NEW_AXIS_ROTATION))
+
+
+def test_rotate_points():
+    points = [Point(1, 2, 3), Point(4, 3, 2)]
+    all_rots = get_all_points_rotations(points)
+    print(list(all_rots))
+
+
+def test_compare():
+    a = Point(1, 2)
+    b = Point(2, 1)
+    assert b < a
+
+
+def test_print_point():
+    p = Point(1, 2, 3)
+    print(p)
+    p_r = p.rotate(Rotation.from_euler('x', 90, degrees=True))
+    print(p_r)
 
 
 def test_point_operations():

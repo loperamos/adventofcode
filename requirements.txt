@@ -2,3 +2,5 @@ coloredlogs
 colorama
 numpy
 sortedcontainers
+scipy
+pytest

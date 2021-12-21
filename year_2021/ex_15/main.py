@@ -6,7 +6,7 @@ from typing import Generator, Any
 import numpy as np
 from numpy.typing import NDArray
 
-from utils.debugging import debug, df
+from utils.debugging import print_array
 from utils.geometry import Grid, Point
 from utils.runner import run_main
 
@@ -18,10 +18,6 @@ def increase_vals(in_array: NDArray, val: int) -> NDArray:
     out = in_array + val
     out[out > 9] -= 9
     return out
-
-
-def print_array(arr: NDArray) -> None:
-    debug("\n" + np.array2string(arr, max_line_width=100000))
 
 
 def get_min_cost_heap(grid: Grid) -> int:
