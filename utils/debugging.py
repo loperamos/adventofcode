@@ -49,5 +49,9 @@ def info(msg: str) -> None:
     logger.info(msg)
 
 
+def array_to_str(arr: NDArray) -> str:
+    return np.array2string(arr, max_line_width=100000)
+
+
 def print_array(arr: NDArray) -> None:
-    debug("\n" + np.array2string(arr, max_line_width=100000))
+    debug("\n" + array_to_str(arr))
