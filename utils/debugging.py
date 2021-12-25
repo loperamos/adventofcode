@@ -53,5 +53,13 @@ def array_to_str(arr: NDArray) -> str:
     return np.array2string(arr, max_line_width=100000)
 
 
+def print_array_as_str(arr: NDArray, dbg: bool = True):
+    for l in arr:
+        if dbg:
+            debug("".join(l))
+        else:
+            info("".join(l))
+
+
 def print_array(arr: NDArray) -> None:
     debug("\n" + array_to_str(arr))
