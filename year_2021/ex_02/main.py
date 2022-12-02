@@ -6,7 +6,7 @@ import numpy as np
 from utils.debugging import debug
 from utils.runner import run_main
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 action = {
     "forward": np.array([0, 1]),

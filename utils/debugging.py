@@ -38,14 +38,18 @@ def set_debug(debug: bool = False) -> None:
 
 
 def df(item: object) -> None:
-    logger.debug("\n" + pformat(item))
+    debug("\n" + pformat(item))
 
 
-def debug(msg: str) -> None:
+def info_format(item: object) -> None:
+    info("\n" + pformat(item))
+
+
+def debug(msg: object) -> None:
     logger.debug(msg)
 
 
-def info(msg: str) -> None:
+def info(msg: object) -> None:
     logger.info(msg)
 
 

@@ -20,7 +20,7 @@ def test_rotate_points():
 def test_compare():
     a = Point(1, 2)
     b = Point(2, 1)
-    assert b < a
+    assert a < b
 
 
 def test_print_point():
