@@ -4,3 +4,4 @@ numpy
 sortedcontainers
 scipy
 pytest
+black[d]

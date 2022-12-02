@@ -1,37 +1,24 @@
 from enum import Enum
 from typing import Generator
 
-from utils.debugging import debug, info
+from utils.debugging import debug
 from utils.runner import run_main
 
 
 class Choice(Enum):
-    ROCK = 'A'
-    PAPER = 'B'
-    SCISSORS = 'C'
+    ROCK: str = "A"
+    PAPER: str = "B"
+    SCISSORS: str = "C"
 
 
-same = {
-    'X': 'A',
-    'Y': 'B',
-    'Z': 'C'
-}
+same = {"X": "A", "Y": "B", "Z": "C"}
 
-points = {
-    Choice.ROCK: 1,
-    Choice.PAPER: 2,
-    Choice.SCISSORS: 3
-}
-beats = {
-    Choice.ROCK: Choice.SCISSORS,
-    Choice.PAPER: Choice.ROCK,
-    Choice.SCISSORS: Choice.PAPER
-}
-loses = {
-    Choice.ROCK: Choice.PAPER,
-    Choice.PAPER: Choice.SCISSORS,
-    Choice.SCISSORS: Choice.ROCK
-}
+points = {Choice.ROCK: 1, Choice.PAPER: 2, Choice.SCISSORS: 3}
+
+choices = list(Choice)
+
+beats = {c: choices[i - 1] for i, c in enumerate(choices)}
+loses = {l: b for b, l in beats.items()}
 
 
 def get_points(me: Choice, other: Choice) -> int:
@@ -47,11 +34,11 @@ def pt_1(prob_input: Generator) -> int:
     total = 0
 
     for line in prob_input:
-        elven_raw, me_raw = line.split()
-        elven = Choice(elven_raw)
+        elf_raw, me_raw = line.split()
+        elf = Choice(elf_raw)
         me = Choice(same[me_raw])
-        total += get_points(me, elven)
-        debug(f"{me=}, {elven=} -> {total=}")
+        total += get_points(me, elf)
+        debug(f"{me=}, {elf=} -> {total=}")
 
     return total
 
@@ -60,25 +47,20 @@ def pt_2(prob_input: Generator) -> int:
     total = 0
 
     for line in prob_input:
-        elven_raw, me_result = line.split()
-        elven = Choice(elven_raw)
-        if me_result == 'X':
-            me = beats[elven]
-        elif me_result == 'Y':
-            me = elven
+        elf_raw, me_result = line.split()
+        elf = Choice(elf_raw)
+        if me_result == "X":
+            me = beats[elf]
+        elif me_result == "Y":
+            me = elf
         else:
-            me = loses[elven]
-        total += get_points(me, elven)
+            me = loses[elf]
+        total += get_points(me, elf)
     return total
 
 
 def main():
-    run_main(pt_1, pt_2, __file__, [
-        15,
-        15337,
-        12,
-        11696
-    ])
+    run_main(pt_1, pt_2, __file__, [15, 15337, 12, 11696])
 
 
 if __name__ == "__main__":
