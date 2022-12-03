@@ -5,3 +5,4 @@ sortedcontainers
 scipy
 pytest
 black[d]
+more-itertools
