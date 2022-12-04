@@ -1,64 +1,43 @@
 import logging
+import re
 from typing import Generator
 
-from utils.debugging import debug
+import portion as p  # type: ignore
+
 from utils.runner import run_main
 
 logger = logging.getLogger(__name__)
 
+intervals_re = re.compile(r"(\d+)-(\d+),(\d+)-(\d+)")
 
-def is_inside(section_a, section_b) -> bool:
-    return section_a[0] >= section_b[0] and section_a[1] <= section_b[1]
+
+def get_intervals(line: str) -> tuple[p.Interval, p.Interval]:
+    m = intervals_re.match(line)
+    assert m, "We should have matches"
+    return p.closed(int(m[1]), int(m[2])), p.closed(int(m[3]), int(m[4]))
 
 
 def pt_1(prob_input: Generator) -> int:
-    p = 0
+    contained = 0
     for line in prob_input:
-        elf_a, elf_b = line.split(",")
-        sa = elf_a.split("-")
-        sb = elf_b.split("-")
-        sa = int(sa[0]), int(sa[1])
-        sb = int(sb[0]), int(sb[1])
-        debug(f"{sa=}, {sb=}")
-        if is_inside(sa, sb):
-            debug(f"overlaps a in b")
-            p += 1
-        elif is_inside(sb, sa):
-            debug(f"overlaps b in a")
-            p += 1
-
-    return p
-
-
-def overlaps(section_a, section_b) -> bool:
-    # ..3...7
-    # ...4..7
-
-    return section_a[0] <= section_b[0] <= section_a[1] or section_a[0] <= section_b[1] <= section_a[1]
+        i_a, i_b = get_intervals(line)
+        if i_a.contains(i_b) or i_b.contains(i_a):
+            contained += 1
+    return contained
 
 
 def pt_2(prob_input: Generator) -> int:
-    p = 0
+    overlapping = 0
     for line in prob_input:
-        elf_a, elf_b = line.split(",")
-        sa = elf_a.split("-")
-        sb = elf_b.split("-")
+        i_a, i_b = get_intervals(line)
+        if i_a.overlaps(i_b):
+            overlapping += 1
 
-        sa = int(sa[0]), int(sa[1])
-        sb = int(sb[0]), int(sb[1])
-        debug(f"{sa=}, {sb=}")
-        if overlaps(sa, sb):
-            debug(f"overlaps a in b")
-            p += 1
-        elif overlaps(sb, sa):
-            debug(f"overlaps b in a")
-            p += 1
-
-    return p
+    return overlapping
 
 
 def main():
-    run_main(pt_1, pt_2, __file__, [2, 500, 4, 0])
+    run_main(pt_1, pt_2, __file__, [2, 500, 4, 815])
 
 
 if __name__ == "__main__":

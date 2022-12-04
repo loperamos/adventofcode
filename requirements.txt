@@ -6,3 +6,5 @@ scipy
 pytest
 black[d]
 more-itertools
+pandas
+portion
