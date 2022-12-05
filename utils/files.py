@@ -7,7 +7,7 @@ from typing import Generator, Any
 def _get(path: Path) -> Generator[str, Any, None]:
     with path.open() as f:
         for line in f.readlines():
-            yield line.rstrip()
+            yield line.rstrip("\n")
 
 
 @dataclass
@@ -27,4 +27,4 @@ def line_generator(file_name: str = "exercise.txt") -> Generator[str, None, None
     path = Path(os.path.curdir) / "inputs" / file_name
     with path.open() as f:
         for line in f.readlines():
-            yield line.rstrip()
+            yield line.rstrip("\n")
